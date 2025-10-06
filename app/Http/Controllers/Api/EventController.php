@@ -7,6 +7,7 @@ use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Http\Traits\LoadIncludeRelationships;
+use Illuminate\Support\Facades\Gate;
 
 class EventController extends Controller
 {
@@ -18,6 +19,8 @@ class EventController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
+
+        // Gate::authorize('update', $post);
     }
 
 
