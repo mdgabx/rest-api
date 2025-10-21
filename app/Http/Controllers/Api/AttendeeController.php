@@ -8,6 +8,7 @@ use App\Models\Attendee;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Http\Traits\LoadIncludeRelationships;
+use Illuminate\Support\Facades\Gate;
 
 class AttendeeController extends Controller
 {
@@ -15,6 +16,13 @@ class AttendeeController extends Controller
     use LoadIncludeRelationships;
 
     private $relations = ['user', 'attendees', 'attendees.user'];
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
+
+        // Gate::authorize('update', $post);
+    }
 
     public function index(Event $event)
     {
@@ -52,6 +60,8 @@ class AttendeeController extends Controller
      */
     public function destroy(Event $event, Attendee $attendee)
     {
+        Gate::authorize('delete-attendee', [$event, $attendee]);
+
         $attendee->delete();
 
         return response(status: 204);
